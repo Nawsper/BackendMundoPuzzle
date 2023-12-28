@@ -42,6 +42,25 @@ export default class UserDao {
         }
     }
 
+
+    //passport jwt
+    async loginJwt(user){
+        try {
+          const { email, password } = user;
+          const userExist = await this.getByEmail(email); 
+          if(userExist){
+            const passValid = isValidPass(userExist, password)
+            if(!passValid) return false
+            else return userExist
+          } return false
+        } catch (error) {
+          console.log(error)
+          throw new Error(error)
+        }
+      }
+
+      //
+
     async getByEmail(email) {
         try {
             const userExist = await UserModel.findOne({ email });

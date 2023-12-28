@@ -14,12 +14,14 @@ import passport from 'passport';
 import './passport/github-strategy.js'
 import './passport/google-strategy.js'
 import './passport/jwt.js'
+import cookieParser from "cookie-parser";
 
 
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser());
 app.use(errorHandler);
 app.use(express.static(__dirname + '/public'))
 app.use(session(mongoStoreOptions))

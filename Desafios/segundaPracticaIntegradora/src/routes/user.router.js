@@ -5,7 +5,7 @@ import passport from "passport";
 const router = Router();
 
 router.post('/register', passport.authenticate('register'), controller.registerResponse);
-router.post('/login', passport.authenticate('login'), controller.loginResponse);
+// router.post('/login', passport.authenticate('login'), controller.loginResponse);
 router.get("/logout", controller.logoutUser);
 
 //google
@@ -25,7 +25,10 @@ router.get("/profile-github", passport.authenticate("github", {
     passReqToCallback: true
 }));
 
-router.get('/private', passport.authenticate('jwt'), (req, res) => res.send(req.user));
+//jwt
+// router.get('/private', passport.authenticate('jwt'), (req, res) => res.send(req.user));
+router.get('/private-cookies', passport.authenticate('jwtCookies'), (req, res) => res.send(req.user));
+router.post('/login', passport.authenticate('login'), controller.login);
 
 export default router;
 

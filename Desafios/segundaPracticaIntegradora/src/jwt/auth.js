@@ -1,8 +1,8 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
-export const PRIVATE_KEY = '1234'
+export const PRIVATE_KEY = '1234';
 
-export const generateToken = (user) => {
+export const generateToken = ( user ) => {
     const payload = {
         userId: user._id,
         first_name: user.first_name,
@@ -12,7 +12,8 @@ export const generateToken = (user) => {
     };
 
     const token = jwt.sign(payload, PRIVATE_KEY, {
-        expiresIn: '20m',
+        expiresIn: '20m'
     });
+
     return token;
-}
+};
