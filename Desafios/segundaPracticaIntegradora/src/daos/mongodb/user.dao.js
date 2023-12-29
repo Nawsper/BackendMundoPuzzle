@@ -28,38 +28,38 @@ export default class UserDao {
         }
     }
 
-    async loginUser(user) {
-        try {
-            const { email, password } = user;
-            const userExist = await this.getByEmail({ email });
-            if (userExist) {
-                const isValid = isValidPass(password, userExist);
-                if (!isValid) return false;
-                else return userExist
-            } return false;
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    // async loginUser(user) {
+    //     try {
+    //         const { email, password } = user;
+    //         const userExist = await this.getByEmail({ email });
+    //         if (userExist) {
+    //             const isValid = isValidPass(password, userExist);
+    //             if (!isValid) return false;
+    //             else return userExist
+    //         } return false;
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 
 
     //passport jwt
-    async loginJwt(user){
+    async loginJwt(user) {
         try {
-          const { email, password } = user;
-          const userExist = await this.getByEmail(email); 
-          if(userExist){
-            const passValid = isValidPass(userExist, password)
-            if(!passValid) return false
-            else return userExist
-          } return false
+            const { email, password } = user;
+            const userExist = await this.getByEmail(email);
+            if (userExist) {
+                const passValid = isValidPass(password, userExist)
+                if (!passValid) return false
+                else return userExist
+            } return false
         } catch (error) {
-          console.log(error)
-          throw new Error(error)
+            console.log(error)
+            throw new Error(error)
         }
-      }
+    }
 
-      //
+    //
 
     async getByEmail(email) {
         try {

@@ -24,7 +24,7 @@ const signup = async (req, email, password, done) => {
 
 const login = async (req, email, password, done) => {
     try {
-        const userLogin = await userDao.loginUser(req.body);
+        const userLogin = await userDao.loginJwt(req.body);
         if (!userLogin) return done(null, false, { msg: "User not found" });
         return done(null, userLogin);
     } catch (error) {
