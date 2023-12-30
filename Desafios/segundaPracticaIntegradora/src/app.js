@@ -2,19 +2,16 @@ import './daos/mongodb/connection.js'
 import express from 'express'
 import { __dirname, mongoStoreOptions } from './utils.js'
 import { errorHandler } from './middlewares/errorHandler.js';
-import productRouter from '../src/routes/product.router.js'
-import cartRouter from '../src/routes/cart.router.js'
-import userRouter from '../src/routes/user.router.js'
 import handlebars from 'express-handlebars'
-import viewsRouter from '../src/routes/views.router.js'
 import { Server } from 'socket.io'
 import session from 'express-session';
-import './passport/strategies.js'
 import passport from 'passport';
+import cookieParser from "cookie-parser";
+import router from '../src/routes/index.router.js'
+import './passport/strategies.js'
 import './passport/github-strategy.js'
 import './passport/google-strategy.js'
 import './passport/jwt.js'
-import cookieParser from "cookie-parser";
 
 
 const app = express()
@@ -33,11 +30,7 @@ app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars')
 
-app.use('/api/products', productRouter)
-app.use('/api/carts', cartRouter)
-app.use('/', viewsRouter)
-app.use('/users', userRouter)
-
+app.use('', router)
 
 const httpServer = app.listen(8080, () => console.log("Server OK en puerto 8080"))
 
