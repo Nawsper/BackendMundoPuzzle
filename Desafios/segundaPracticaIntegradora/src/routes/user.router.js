@@ -27,7 +27,7 @@ router.get("/profile-github", passport.authenticate("github", {
 
 //jwt
 // router.get('/private', passport.authenticate('jwt'), (req, res) => res.send(req.user));
-router.get('/private-cookies', passport.authenticate('jwtCookies'), (req, res) => res.send(req.user));
+router.get('/current', passport.authenticate('current'), (req, res) => res.send(req.user));
 router.post('/login', passport.authenticate('login'), controller.login);
 
 export default router;
