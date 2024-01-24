@@ -10,10 +10,10 @@ const strategyOptions = {
 };
 
 const registerOrLogin = async (accessToken, refreshToken, profile, done) => {
-    const email = profile._json.email !== null ? profile._json.email : profile_json.blog;
+    const email = profile._json.email !== null ? profile._json.email : profile._json.blog;
     const user = await userDao.getByEmail(email);
     if (user) return done(null, user);
-    const newUser = await userDao.registerUser({
+    const newUser = await userDao.register({
         first_name: profile._json.name.split(' ')[0],
         last_name: profile._json.name.split(' ')[1],
         email,

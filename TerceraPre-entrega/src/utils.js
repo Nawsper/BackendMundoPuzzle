@@ -30,3 +30,7 @@ export const createHash = (password) => {
 export const isValidPass = (password, user) => {
     return compareSync(password, user.password);
 };
+
+export const createResponse = (res, statusCode, data) => {
+    return res.status(statusCode).json({ data });
+};

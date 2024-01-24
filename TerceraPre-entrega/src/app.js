@@ -1,41 +1,39 @@
 import './daos/mongodb/connection.js'
 import express from 'express'
 import { __dirname, mongoStoreOptions } from './utils.js'
-import { errorHandler } from './middlewares/errorHandler.js';
-import productRouter from '../src/routes/product.router.js'
-import cartRouter from '../src/routes/cart.router.js'
-import userRouter from '../src/routes/user.router.js'
+import { errorHandler } from './middlewares/errorHandler.js'
 import handlebars from 'express-handlebars'
-import viewsRouter from '../src/routes/views.router.js'
 import { Server } from 'socket.io'
 import session from 'express-session';
-import './passport/strategies.js'
 import passport from 'passport';
+import cookieParser from "cookie-parser";
+import router from '../src/routes/index.router.js'
+import './passport/strategies.js'
 import './passport/github-strategy.js'
+import './passport/google-strategy.js'
+import './passport/jwt.js'
+import 'dotenv/config'
 
 
 const app = express()
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(errorHandler);
-app.use(express.static(__dirname + '/public'))
-app.use(session(mongoStoreOptions))
+app
+    .use(express.json())
+    .use(express.urlencoded({ extended: true }))
+    .use(cookieParser())
+    .use(errorHandler)
+    .use(express.static(__dirname + '/public'))
+    .use(session(mongoStoreOptions))
+    .use(passport.initialize())
+    .use(passport.session())
+    .engine('handlebars', handlebars.engine())
+    .set('views', __dirname + '/views')
+    .set('view engine', 'handlebars')
+    .use('', router)
 
-app.use(passport.initialize())
-app.use(passport.session())
+const PORT = process.env.PORT
 
-app.engine('handlebars', handlebars.engine())
-app.set('views', __dirname + '/views')
-app.set('view engine', 'handlebars')
-
-app.use('/api/products', productRouter)
-app.use('/api/carts', cartRouter)
-app.use('/', viewsRouter)
-app.use('/users', userRouter)
-
-
-const httpServer = app.listen(8080, () => console.log("Server OK en puerto 8080"))
+const httpServer = app.listen(PORT, () => console.log(`Server OK on port ${PORT}`))
 
 const socketServer = new Server(httpServer)
 

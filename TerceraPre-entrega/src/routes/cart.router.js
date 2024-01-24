@@ -1,16 +1,15 @@
 import { Router } from "express";
-import * as controller from '../controllers/cart.controllers.js';
-// import { CartsManager } from '../managers/cartManager.js'
+import CartController from '../controllers/cart.controllers.js';
+
+const controller = new CartController()
 
 const router = Router()
 
-// const cartManager = new CartsManager('./src/data/carts.json')
-
 // rutas
 
-router.get('/', controller.getCarts)
+router.get('/', controller.getAll)
 
-router.post('/', controller.addCart);
+router.post('/', controller.create);
 
 router.get('/:cid', controller.getCartById);
 

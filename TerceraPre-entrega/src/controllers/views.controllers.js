@@ -58,6 +58,8 @@ export const errorLogin = (req, res) => {
     res.render('errorLogin')
 }
 export const profile = (req, res) => {
-    res.render('profile')
+    console.log("req.user", req.user);
+    const user = req.user.toObject();
+    res.render('profile', { user })
     console.log(req.session);
 }

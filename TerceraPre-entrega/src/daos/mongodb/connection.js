@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import 'dotenv/config'
 
-export const connectionString = "mongodb://127.0.0.1:27017/mundoPuzzle";
+export const connectionString = process.env.MONGO_LOCAL_URL
 
 async function connectToDatabase() {
     try {

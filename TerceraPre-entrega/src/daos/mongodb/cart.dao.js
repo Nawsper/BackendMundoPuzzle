@@ -1,24 +1,10 @@
 import { CartModel } from "./models/cart.model.js";
 import { ProductModel } from "./models/product.model.js";
+import MongoDao from "./mongo.dao.js";
 
-export default class CartDaoMongoDB {
-
-    async getCarts() {
-        try {
-            const response = await CartModel.find({});
-            return response;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async addCart(obj) {
-        try {
-            const response = await CartModel.create(obj);
-            return response;
-        } catch (error) {
-            console.log(error);
-        }
+export default class CartDaoMongo extends MongoDao {
+    constructor() {
+        super(CartModel)
     }
 
     async getCartById(cid) {

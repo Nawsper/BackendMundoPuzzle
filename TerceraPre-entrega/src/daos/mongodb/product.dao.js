@@ -1,6 +1,11 @@
 import { ProductModel } from "./models/product.model.js";
+import MongoDao from "./mongo.dao.js";
 
-export default class ProductDaoMongoDB {
+
+export default class ProductDaoMongo extends MongoDao {
+    constructor() {
+        super(ProductModel)
+    }
 
     async getProducts(queryParams) {
         try {
@@ -32,7 +37,7 @@ export default class ProductDaoMongoDB {
                 sortOptions.price = -1;
             }
 
-            const response = await ProductModel.paginate(filter, {
+            const response = await this.model.paginate(filter, {
                 ...options,
                 sort: sortOptions,
             });
@@ -42,41 +47,4 @@ export default class ProductDaoMongoDB {
             console.log(error);
         }
     }
-
-    async addProduct(obj) {
-        try {
-            const response = await ProductModel.create(obj);
-            return response;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async getProductById(pid) {
-        try {
-            const response = await ProductModel.findById(pid);
-            return response;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async updateProduct(pid, updatedProduct) {
-        try {
-            const response = await ProductModel.findByIdAndUpdate(pid, updatedProduct, { new: true });
-            return response;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async deleteProduct(pid) {
-        try {
-            const response = await ProductModel.findByIdAndDelete(pid);
-            return response;
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
 }        

@@ -1,21 +1,26 @@
 import { createHash, isValidPass } from '../../utils.js';
 import { UserModel } from './models/user.models.js'
+import MongoDao from "./mongo.dao.js";
 
-export default class UserDao {
-    async registerUser(user) {
+export default class UserDaoMongo extends MongoDao {
+    constructor() {
+        super(UserModel)
+    }
+
+    async register(user) {
         try {
             const { email, password } = user;
-            const existUser = await UserModel.findOne({ email });
+            const existUser = await this.getByEmail(email);
             if (!existUser) {
                 if (email === 'adminCoder@coder.com' && password === 'adminCod3r123') {
-                    const newUser = await UserModel.create({
+                    const newUser = await this.model.create({
                         ...user,
                         password: createHash(password),
                         role: 'admin'
                     });
                     return newUser;
                 }
-                const newUser = await UserModel.create({
+                const newUser = await this.model.create({
                     ...user,
                     password: createHash(password),
                 });
@@ -28,23 +33,24 @@ export default class UserDao {
         }
     }
 
-    async loginUser(user) {
+    async login(user) {
         try {
             const { email, password } = user;
-            const userExist = await this.getByEmail({ email });
+            const userExist = await this.getByEmail(email);
             if (userExist) {
-                const isValid = isValidPass(password, userExist);
-                if (!isValid) return false;
+                const passValid = isValidPass(password, userExist)
+                if (!passValid) return false
                 else return userExist
-            } return false;
+            } return false
         } catch (error) {
-            console.log(error);
+            console.log(error)
+            throw new Error(error)
         }
     }
 
     async getByEmail(email) {
         try {
-            const userExist = await UserModel.findOne({ email });
+            const userExist = await this.model.findOne({ email });
             if (userExist) {
                 return userExist
             } return false
@@ -54,14 +60,4 @@ export default class UserDao {
         }
     }
 
-    async getById(id) {
-        try {
-            const userExist = await UserModel.findById(id)
-            if (userExist) {
-                return userExist
-            } return false
-        } catch (error) {
-            console.log(error)
-        }
-    }
 }

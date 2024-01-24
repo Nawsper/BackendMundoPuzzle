@@ -1,7 +1,8 @@
 import UserDao from '../daos/mongodb/user.dao.js'
-const userDao = new UserDao()
 import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
+
+const userDao = new UserDao()
 
 const strategyOptions = {
     usernameField: "email",
@@ -9,12 +10,11 @@ const strategyOptions = {
     passReqToCallback: true,
 };
 
-
 const signup = async (req, email, password, done) => {
     try {
         const user = await userDao.getByEmail(email);
         if (user) return done(null, false);
-        const newUser = await userDao.registerUser(req.body);
+        const newUser = await userDao.register(req.body);
         return done(null, newUser);
     } catch (error) {
         console.log(error);
@@ -24,7 +24,7 @@ const signup = async (req, email, password, done) => {
 
 const login = async (req, email, password, done) => {
     try {
-        const userLogin = await userDao.loginUser(req.body);
+        const userLogin = await userDao.login(req.body);
         if (!userLogin) return done(null, false, { msg: "User not found" });
         return done(null, userLogin);
     } catch (error) {
