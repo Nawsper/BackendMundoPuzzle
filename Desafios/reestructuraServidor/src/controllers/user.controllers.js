@@ -11,8 +11,8 @@ export default class UserControllers extends Controllers {
 
     async register(req, res, next) {
         try {
-            const newUser = await userService.register(req.body)
-            if (!newUser) createResponse(res, 400, 'User already exists')
+            const newUser = await userService.register(req.body);
+            if (!newUser) createResponse(res, 404, 'User already exists');
             else createResponse(res, 200, newUser)
         } catch (error) {
             next(error.message)

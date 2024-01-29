@@ -10,7 +10,7 @@ export default class CartController extends Controllers {
     async getCartById(req, res, next) {
         try {
             const { cid } = req.params;
-            const cart = await service.getCartById(cid);
+            const cart = await cartService.getCartById(cid);
             if (!cart) res.status(404).json({ msg: "Cart not found!" });
             else res.json(cart);
         } catch (error) {
@@ -22,7 +22,7 @@ export default class CartController extends Controllers {
         try {
             const { cid } = req.params;
             const productsArray = req.body;
-            const updatedCart = await service.updateCart(cid, productsArray);
+            const updatedCart = await cartService.updateCart(cid, productsArray);
             res.json(updatedCart);
         } catch (error) {
             next(error.message);
@@ -33,7 +33,7 @@ export default class CartController extends Controllers {
     async addProductToCart(req, res, next) {
         try {
             const { cid, pid } = req.params;
-            const newProdCart = await service.addProductToCart(cid, pid);
+            const newProdCart = await cartService.addProductToCart(cid, pid);
             res.json(newProdCart);
         } catch (error) {
             next(error.message);
@@ -44,7 +44,7 @@ export default class CartController extends Controllers {
         try {
             const { cid, pid } = req.params;
             const { quantity } = req.body;
-            const updatedQtyCart = await service.updateQtyProductFromCart(cid, pid, Number(quantity));
+            const updatedQtyCart = await cartService.updateQtyProductFromCart(cid, pid, Number(quantity));
             res.json(updatedQtyCart);
         } catch (error) {
             next(error.message);
@@ -55,7 +55,7 @@ export default class CartController extends Controllers {
         try {
             const { cid } = req.params;
             const { pid } = req.params;
-            const deleteProduct = await service.deleteProductFromCart(cid, pid);
+            const deleteProduct = await cartService.deleteProductFromCart(cid, pid);
             res.json(deleteProduct);
         } catch (error) {
             next(error.message);
@@ -65,7 +65,7 @@ export default class CartController extends Controllers {
     async deleteAllProductsFromCart(req, res, next) {
         try {
             const { cid } = req.params;
-            const deleteAllProducts = await service.deleteAllProductFromCart(cid);
+            const deleteAllProducts = await cartService.deleteAllProductFromCart(cid);
             res.json(deleteAllProducts);
         } catch (error) {
             next(error.message);

@@ -26,7 +26,6 @@ export const createHash = (password) => {
 };
 
 //login
-
 export const isValidPass = (password, user) => {
     return compareSync(password, user.password);
 };
