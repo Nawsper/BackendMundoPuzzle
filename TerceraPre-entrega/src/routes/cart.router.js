@@ -1,7 +1,10 @@
 import { Router } from "express";
 import CartController from '../controllers/cart.controllers.js';
+import TicketController from "../controllers/ticket.controllers.js";
+import { verifyToken } from '../middlewares/verifyToken.js';
 
 const controller = new CartController()
+const ticketcontroller = new TicketController()
 
 const router = Router()
 
@@ -18,6 +21,8 @@ router.put('/:cid', controller.updateCart);
 router.put('/:cid/products/:pid', controller.updateQtyProductFromCart);
 
 router.post('/add/:cid/:pid', controller.addProductToCart);
+
+router.post('/:cid/purchase', verifyToken, ticketcontroller.generateTicket)
 
 router.delete('/:cid/products/:pid', controller.deleteProductFromCart);
 

@@ -41,7 +41,7 @@ export default class CartServices extends Services {
     async addProductToCart(cid, pid) {
         try {
             const cart = await cartDao.getCartById(cid);
-            const product = await prodDao.getProductById(pid);
+            const product = await prodDao.getById(pid);
 
             if (!product) throw new Error("Product not found");
             if (!cart) throw new Error("Cart not found");
