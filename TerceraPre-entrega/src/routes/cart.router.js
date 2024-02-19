@@ -2,6 +2,7 @@ import { Router } from "express";
 import CartController from '../controllers/cart.controllers.js';
 import TicketController from "../controllers/ticket.controllers.js";
 import { verifyToken } from '../middlewares/verifyToken.js';
+import { authorize } from "../middlewares/authorize.js";
 
 const controller = new CartController()
 const ticketcontroller = new TicketController()
@@ -10,22 +11,22 @@ const router = Router()
 
 // rutas
 
-router.get('/', controller.getAll)
-
-router.post('/', controller.create);
+router.get('/', authorize('admin'), controller.getAll)
 
 router.get('/:cid', controller.getCartById);
 
-router.put('/:cid', controller.updateCart);
+router.put('/:cid', authorize('user'), controller.updateCart);
 
-router.put('/:cid/products/:pid', controller.updateQtyProductFromCart);
+router.put('/:cid/products/:pid', authorize('user'), controller.updateQtyProductFromCart);
 
-router.post('/add/:cid/:pid', controller.addProductToCart);
+router.post('/', controller.create);
 
-router.post('/:cid/purchase', verifyToken, ticketcontroller.generateTicket)
+router.post('/add/:cid/:pid', authorize('user'), controller.addProductToCart);
 
-router.delete('/:cid/products/:pid', controller.deleteProductFromCart);
+router.post('/:cid/purchase', authorize('user'), verifyToken, ticketcontroller.generateTicket)
 
-router.delete('/:cid', controller.deleteAllProductsFromCart);
+router.delete('/:cid/products/:pid', authorize('user'), controller.deleteProductFromCart);
+
+router.delete('/:cid', authorize('user'), controller.deleteAllProductsFromCart);
 
 export default router
