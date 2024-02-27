@@ -12,7 +12,7 @@ export default class CartDaoMongo extends MongoDao {
             const response = await CartModel.findById(cid).populate('products.product');
             return response;
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 
@@ -33,8 +33,7 @@ export default class CartDaoMongo extends MongoDao {
             await cart.save();
             return cart;
         } catch (error) {
-            console.log(error);
-            throw error;
+            throw new Error(error.message);
         }
     }
 
@@ -56,7 +55,7 @@ export default class CartDaoMongo extends MongoDao {
             await cart.save();
             return cart;
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 
@@ -72,7 +71,7 @@ export default class CartDaoMongo extends MongoDao {
             await cart.save();
             return cart;
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 
@@ -85,7 +84,7 @@ export default class CartDaoMongo extends MongoDao {
             cart.save();
             return cart;
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 
@@ -95,8 +94,7 @@ export default class CartDaoMongo extends MongoDao {
 
             return cart;
         } catch (error) {
-            console.log(error);
-            throw error;
+            throw new Error(error.message);
         }
     }
 }

@@ -1,6 +1,6 @@
 import passport from "passport";
 import { ExtractJwt, Strategy as jwtStrategy } from "passport-jwt";
-import UserDao from '../daos/mongodb/user.dao.js'
+import UserDao from '../persistence/daos/mongodb/user.dao.js'
 import { PRIVATE_KEY } from "../jwt/auth.js";
 
 const userDao = new UserDao()

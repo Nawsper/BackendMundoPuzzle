@@ -1,4 +1,4 @@
-import { createHash, isValidPass } from '../../utils.js';
+import { createHash, isValidPass } from '../../../utils/utils.js';
 import { UserModel } from './models/user.models.js'
 import MongoDao from "./mongo.dao.js";
 
@@ -29,7 +29,7 @@ export default class UserDaoMongo extends MongoDao {
                 return false;
             }
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 
@@ -43,8 +43,7 @@ export default class UserDaoMongo extends MongoDao {
                 else return userExist
             } return false
         } catch (error) {
-            console.log(error)
-            throw new Error(error)
+            throw new Error(error.message);
         }
     }
 
@@ -55,8 +54,7 @@ export default class UserDaoMongo extends MongoDao {
                 return userExist
             } return false
         } catch (error) {
-            console.log(error)
-            throw new Error(error)
+            throw new Error(error.message);
         }
     }
 

@@ -1,15 +1,16 @@
 import fs from 'fs'
+import FsDao from "./fs.dao.js";
+const path = "./src/persistence/daos/filesystem/users.json";
 
 import ProductDaoFS from './product.dao.js'
-import { __dirname } from "../../utils.js";
+import { __dirname } from "../../../utils/utils.js";
 
-const productManager = new ProductDaoFS(__dirname + "/daos/filesystem/data/products.json")
+const productManager = new ProductDaoFS(__dirname + "/persistence/daos/filesystem/data/products.json")
 
 
-
-export default class CartDaosFS {
-    constructor(path) {
-        this.path = path
+export default class CartDaoFS extends FsDao {
+    constructor() {
+        super(path);
     }
 
     async getCarts() {

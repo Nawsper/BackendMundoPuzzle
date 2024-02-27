@@ -1,7 +1,9 @@
 import Controllers from './class.controller.js';
 import UserService from '../services/user.services.js';
-import { createResponse } from "../utils.js";
+import errorsDictionary from "../utils/errors.dictionary.js";
+import { HttpResponse } from "../utils/http.response.js";
 
+const httpResponse = new HttpResponse();
 const userService = new UserService();
 
 export default class UserControllers extends Controllers {
@@ -12,10 +14,10 @@ export default class UserControllers extends Controllers {
     async register(req, res, next) {
         try {
             const newUser = await userService.register(req.body);
-            if (!newUser) createResponse(res, 404, 'User already exists');
-            else createResponse(res, 200, newUser)
+            if (!newUser) return httpResponse.Conflict(res, errorsDictionary.USER_EXISTS);
+            else return httpResponse.Ok(res, newUser)
         } catch (error) {
-            next(error.message)
+            next(error)
         }
     }
 
@@ -24,7 +26,7 @@ export default class UserControllers extends Controllers {
             const { email, password } = req.body;
             const user = await userService.login({ email, password });
             if (!user) {
-                res.json({ msg: 'invalid credentials' });
+                return httpResponse.Unauthorized(res, errorsDictionary.INVALID_CREDENTIALS);
             } else {
                 res
                     .cookie('token', user, { httpOnly: true })
@@ -34,4 +36,16 @@ export default class UserControllers extends Controllers {
             next(error);
         }
     }
+
+    async getByIdDTO(req, res, next) {
+        try {
+            const { id } = req.params;
+            const user = await userService.getByIdDTO(id);
+            if (!user) return httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND);
+            else return httpResponse.Ok(res, user);
+        } catch (error) {
+            next(error);
+        }
+    };
+
 }

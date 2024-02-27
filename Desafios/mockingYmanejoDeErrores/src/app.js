@@ -1,6 +1,5 @@
-import './daos/mongodb/connection.js'
 import express from 'express'
-import { __dirname, mongoStoreOptions } from './utils.js'
+import { __dirname, mongoStoreOptions } from './utils/utils.js'
 import { errorHandler } from './middlewares/errorHandler.js'
 import handlebars from 'express-handlebars'
 import { Server } from 'socket.io'
@@ -21,7 +20,6 @@ app
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
     .use(cookieParser())
-    .use(errorHandler)
     .use(express.static(__dirname + '/public'))
     .use(session(mongoStoreOptions))
     .use(passport.initialize())
@@ -30,6 +28,8 @@ app
     .set('views', __dirname + '/views')
     .set('view engine', 'handlebars')
     .use('', router)
+    .use(errorHandler)
+
 
 const PORT = process.env.PORT
 

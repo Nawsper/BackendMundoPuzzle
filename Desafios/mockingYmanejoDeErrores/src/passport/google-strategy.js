@@ -1,15 +1,17 @@
 // npm i passport-google-oauth20
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import passport from "passport";
-import UserDao from "../daos/mongodb/user.dao.js";
+import 'dotenv/config'
+
+import UserDao from "../persistence/daos/mongodb/user.dao.js";
 const userDao = new UserDao();
 
 //http://console.cloud.google.com
 
 const strategyOptions = {
-    clientID: "971541496953-kg3qfa2s5i0m1cc3nrotbdgp9qqssgmv.apps.googleusercontent.com",
-    clientSecret: "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",
-    callbackURL: "http://localhost:8080/users/oauth2/redirect/accounts.google.com",
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL,
     scope: ['profile', 'email'],
     state: true,
 };

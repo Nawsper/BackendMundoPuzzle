@@ -1,8 +1,18 @@
 import Services from "./class.services.js";
-import CartDaoMongoDB from "../daos/mongodb/cart.dao.js";
-import ProductDaoMongoDB from "../daos/mongodb/product.dao.js";
-const cartDao = new CartDaoMongoDB();
-const productDao = new ProductDaoMongoDB();
+
+// import CartDaosFS from "../persistence/daos/filesystem/cart.dao.js";
+// import ProductDaoFS from "../persistence/daos/filesystem/product.dao.js";
+// const cartDao = new CartDaosFS();
+// const prodDao = new ProductDaoFS();
+
+// import CartDaoMongoDB from "../persistence/daos/mongodb/cart.dao.js";
+// import ProductDaoMongoDB from "../persistence/daos/mongodb/product.dao.js";
+// const cartDao = new CartDaoMongoDB();
+// const prodDao = new ProductDaoMongoDB();
+
+import persistence from '../persistence/factory.js'
+const { cartDao } = persistence
+const { prodDao } = persistence
 
 export default class CartServices extends Services {
     constructor() {
@@ -15,7 +25,7 @@ export default class CartServices extends Services {
             if (!item) return false;
             else return item;
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 
@@ -24,14 +34,14 @@ export default class CartServices extends Services {
             const updatedCart = await cartDao.updateCart(cid, productsArray);
             return updatedCart;
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 
     async addProductToCart(cid, pid) {
         try {
             const cart = await cartDao.getCartById(cid);
-            const product = await productDao.getProductById(pid);
+            const product = await prodDao.getById(pid);
 
             if (!product) throw new Error("Product not found");
             if (!cart) throw new Error("Cart not found");
@@ -39,7 +49,7 @@ export default class CartServices extends Services {
             const newProdCart = await cartDao.addProductToCart(cid, pid);
             return newProdCart;
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 
@@ -48,7 +58,7 @@ export default class CartServices extends Services {
             const updatedQty = await cartDao.updateQtyProductInCart(cid, pid, quantity);
             return updatedQty;
         } catch (error) {
-            throw error;
+            throw new Error(error.message);
         }
     };
 
@@ -58,7 +68,7 @@ export default class CartServices extends Services {
             const deleteProdCart = await cartDao.deleteProductFromCart(cid, pid);
             return deleteProdCart;
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 
@@ -67,7 +77,7 @@ export default class CartServices extends Services {
             const deleteAllProdCart = await cartDao.deleteAllProductsFromCart(cid);
             return deleteAllProdCart;
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     }
 }

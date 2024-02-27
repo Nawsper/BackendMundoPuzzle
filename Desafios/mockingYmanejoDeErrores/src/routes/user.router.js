@@ -27,8 +27,9 @@ router.get("/profile-github", passport.authenticate("github", {
     passReqToCallback: true
 }));
 
-//jwt
-router.get('/current', passport.authenticate('current'), (req, res) => res.send(req.user));
+//jwt - dto
+router.get('/current/dto/:id', passport.authenticate('current'), controller.getByIdDTO);
+
 
 //logout
 // router.get("/logout", controller.logout);
