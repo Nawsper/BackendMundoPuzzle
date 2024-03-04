@@ -1,9 +1,13 @@
 import Services from "./class.services.js";
-import UserDaoMongo from "../daos/mongodb/user.dao.js";
 import { generateToken } from '../jwt/auth.js';
 
+// import UserDaoMongo from "../persistence/daos/mongodb/user.dao.js";
+// const userDao = new UserDaoMongo();
 
-const userDao = new UserDaoMongo();
+import persistence from '../persistence/factory.js'
+const { userDao } = persistence
+import UserRepository from "../persistence/repository/user.repository.js";
+const userRepository = new UserRepository();
 
 export default class UserService extends Services {
   constructor() {
@@ -14,7 +18,7 @@ export default class UserService extends Services {
     try {
       return await userDao.register(user)
     } catch (error) {
-      console.log(error);
+      throw new Error(error.message);
     }
   }
 
@@ -24,7 +28,16 @@ export default class UserService extends Services {
       if (userExist) return generateToken(userExist)
       else return false
     } catch (error) {
-      console.log(error);
+      throw new Error(error.message);
+    }
+  }
+
+  async getByIdDTO(id) {
+    try {
+      const user = await userRepository.getByIdDTO(id);
+      return user ? user : false;
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 

@@ -5,8 +5,10 @@ import MongoStore from 'connect-mongo';
 import { connectionString } from '../config/connection.js';
 import { faker } from "@faker-js/faker";
 
+const currentDir = dirname(fileURLToPath(import.meta.url));
+export const __dirname = dirname(currentDir);
+// export const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export const mongoStoreOptions = {
     store: MongoStore.create({

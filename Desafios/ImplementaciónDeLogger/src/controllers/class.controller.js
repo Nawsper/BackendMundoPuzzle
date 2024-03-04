@@ -1,4 +1,7 @@
-import { createResponse } from "../utils.js";
+import errorsDictionary from "../utils/errors.dictionary.js";
+import { HttpResponse } from "../utils/http.response.js";
+
+const httpResponse = new HttpResponse();
 
 export default class Controllers {
     constructor(service) {
@@ -8,9 +11,9 @@ export default class Controllers {
     getAll = async (req, res, next) => {
         try {
             const items = await this.service.getAll();
-            createResponse(res, 200, items);
+            return httpResponse.Ok(res, items);
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     };
 
@@ -19,13 +22,10 @@ export default class Controllers {
             const { id } = req.params;
             const item = await this.service.getById(id);
             if (!item)
-                createResponse(res, 404, {
-                    method: "service",
-                    error: "Item not found",
-                });
-            else createResponse(res, 200, item);
+                return httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND);
+            else return httpResponse.Ok(res, item);
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     };
 
@@ -33,13 +33,10 @@ export default class Controllers {
         try {
             const newItem = await this.service.create(req.body);
             if (!newItem)
-                createResponse(res, 404, {
-                    method: "service",
-                    error: "Validation error",
-                });
-            else createResponse(res, 200, newItem);
+                return httpResponse.BadRequest(res, errorsDictionary.ITEM_NOT_CREATED);
+            else return httpResponse.Ok(res, newItem);
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     };
 
@@ -47,17 +44,13 @@ export default class Controllers {
         try {
             const { id } = req.params;
             const item = await this.service.getById(id);
-            if (!item)
-                createResponse(res, 404, {
-                    method: "service",
-                    error: "Item not found",
-                });
+            if (!item) return httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND);
             else {
                 const itemUpd = await this.service.update(id, req.body);
-                createResponse(res, 200, itemUpd);
+                return httpResponse.Ok(res, itemUpd);
             }
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     };
 
@@ -65,17 +58,13 @@ export default class Controllers {
         try {
             const { id } = req.params;
             const item = await this.service.getById(id);
-            if (!item)
-                createResponse(res, 404, {
-                    method: "service",
-                    error: "Item not found",
-                });
+            if (!item) return httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND)
             else {
                 const itemDel = await this.service.delete(id);
-                createResponse(res, 200, itemDel);
+                return httpResponse.Ok(res, itemDel);
             }
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     };
 }

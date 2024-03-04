@@ -33,7 +33,7 @@ export const getProducts = async (req, res, next) => {
             nextLink,
         });
     } catch (error) {
-        next(error.message);
+        next(error);
     }
 };
 
@@ -44,7 +44,7 @@ export const getCart = async (req, res, next) => {
         res.render('cart', response);
     }
     catch (error) {
-        next(error.message);
+        next(error);
     }
 }
 

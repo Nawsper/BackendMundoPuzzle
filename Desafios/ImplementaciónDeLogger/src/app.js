@@ -1,6 +1,5 @@
-import './daos/mongodb/connection.js'
 import express from 'express'
-import { __dirname, mongoStoreOptions } from './utils.js'
+import { __dirname, mongoStoreOptions } from './utils/utils.js'
 import { errorHandler } from './middlewares/errorHandler.js'
 import handlebars from 'express-handlebars'
 import { Server } from 'socket.io'
@@ -8,6 +7,7 @@ import session from 'express-session';
 import passport from 'passport';
 import cookieParser from "cookie-parser";
 import router from '../src/routes/index.router.js'
+import { logger } from "../src/utils/logger.js"
 import './passport/strategies.js'
 import './passport/github-strategy.js'
 import './passport/google-strategy.js'
@@ -21,7 +21,6 @@ app
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
     .use(cookieParser())
-    .use(errorHandler)
     .use(express.static(__dirname + '/public'))
     .use(session(mongoStoreOptions))
     .use(passport.initialize())
@@ -30,10 +29,11 @@ app
     .set('views', __dirname + '/views')
     .set('view engine', 'handlebars')
     .use('', router)
+    .use(errorHandler)
 
 const PORT = process.env.PORT
 
-const httpServer = app.listen(PORT, () => console.log(`Server OK on port ${PORT}`))
+const httpServer = app.listen(PORT, () => logger.debug(`Server OK on port ${PORT}`))
 
 const socketServer = new Server(httpServer)
 

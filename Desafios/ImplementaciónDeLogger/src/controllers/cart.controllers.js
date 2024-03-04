@@ -1,6 +1,10 @@
 import Controllers from "./class.controller.js";
 import CartServices from "../services/cart.services.js";
+import errorsDictionary from "../utils/errors.dictionary.js";
+import { HttpResponse } from "../utils/http.response.js";
+
 const cartService = new CartServices();
+const httpResponse = new HttpResponse();
 
 export default class CartController extends Controllers {
     constructor() {
@@ -11,10 +15,10 @@ export default class CartController extends Controllers {
         try {
             const { cid } = req.params;
             const cart = await cartService.getCartById(cid);
-            if (!cart) res.status(404).json({ msg: "Cart not found!" });
-            else res.json(cart);
+            if (!cart) return httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND);
+            else return httpResponse.Ok(res, cart);
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     };
 
@@ -23,9 +27,10 @@ export default class CartController extends Controllers {
             const { cid } = req.params;
             const productsArray = req.body;
             const updatedCart = await cartService.updateCart(cid, productsArray);
-            res.json(updatedCart);
+            if (!updatedCart) return httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND)
+            else return httpResponse.Ok(res, updatedCart);
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     }
 
@@ -34,9 +39,10 @@ export default class CartController extends Controllers {
         try {
             const { cid, pid } = req.params;
             const newProdCart = await cartService.addProductToCart(cid, pid);
-            res.json(newProdCart);
+            if (!newProdCart) return httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND)
+            else return httpResponse.Ok(res, newProdCart);
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     }
 
@@ -45,9 +51,10 @@ export default class CartController extends Controllers {
             const { cid, pid } = req.params;
             const { quantity } = req.body;
             const updatedQtyCart = await cartService.updateQtyProductFromCart(cid, pid, Number(quantity));
-            res.json(updatedQtyCart);
+            if (!updatedQtyCart) return httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND)
+            else return httpResponse.Ok(res, updatedQtyCart);
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     };
 
@@ -56,9 +63,10 @@ export default class CartController extends Controllers {
             const { cid } = req.params;
             const { pid } = req.params;
             const deleteProduct = await cartService.deleteProductFromCart(cid, pid);
-            res.json(deleteProduct);
+            if (!deleteProduct) return httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND)
+            else return httpResponse.Ok(res, deleteProduct);
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     }
 
@@ -66,9 +74,10 @@ export default class CartController extends Controllers {
         try {
             const { cid } = req.params;
             const deleteAllProducts = await cartService.deleteAllProductFromCart(cid);
-            res.json(deleteAllProducts);
+            if (!deleteAllProducts) return httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND)
+            else return httpResponse.Ok(res, deleteAllProducts);
         } catch (error) {
-            next(error.message);
+            next(error);
         }
     };
 
