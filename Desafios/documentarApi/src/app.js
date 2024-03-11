@@ -7,6 +7,10 @@ import session from 'express-session';
 import passport from 'passport';
 import cookieParser from "cookie-parser";
 import router from '../src/routes/index.router.js'
+import { logger } from "../src/utils/logger.js"
+import { info } from './docs/info.js'
+import swaggerUI from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
 import './passport/strategies.js'
 import './passport/github-strategy.js'
 import './passport/google-strategy.js'
@@ -16,7 +20,10 @@ import 'dotenv/config'
 
 const app = express()
 
+const specs = swaggerJSDoc(info);
+
 app
+    .use('/docs', swaggerUI.serve, swaggerUI.setup(specs))
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
     .use(cookieParser())
@@ -30,10 +37,9 @@ app
     .use('', router)
     .use(errorHandler)
 
-
 const PORT = process.env.PORT
 
-const httpServer = app.listen(PORT, () => console.log(`Server OK on port ${PORT}`))
+const httpServer = app.listen(PORT, () => logger.debug(`Server OK on port ${PORT}`))
 
 const socketServer = new Server(httpServer)
 

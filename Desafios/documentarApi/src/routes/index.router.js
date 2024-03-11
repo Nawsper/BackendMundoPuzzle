@@ -4,6 +4,7 @@ import cartRouter from './cart.router.js'
 import userRouter from './user.router.js'
 import viewsRouter from './views.router.js'
 import emailRouter from './email.router.js'
+import loggerRouter from "./logger.router.js";
 
 const router = Router()
 
@@ -13,5 +14,6 @@ router.use('/api/carts', cartRouter)
 router.use('/', viewsRouter)
 router.use('/users', userRouter)
 router.use('/email', emailRouter)
+router.use("/logger", loggerRouter);
 
 export default router
