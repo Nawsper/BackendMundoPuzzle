@@ -14,9 +14,9 @@ router
     .get('/no-dto/:id', controller.getById)
     .get('/dto/:id', controller.getByIdDTO)
     .get("/mockingproducts", controller.getProductsMock)
-    .post('/', authorize('admin'), productValidator, controller.create)
+    .post('/', productValidator, controller.createProducts)
     .post('/dto', authorize('admin'), controller.createProdDTO)
-    .put('/:id', authorize('admin'), controller.update)
-    .delete('/:id', authorize('admin'), controller.delete);
+    .put('/:id', controller.updateProduct)
+    .delete('/:id', controller.deleteProduct);
 
 export default router

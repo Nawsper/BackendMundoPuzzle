@@ -2,6 +2,7 @@ import Controllers from "./class.controller.js";
 import ProductService from "../services/product.services.js";
 import errorsDictionary from "../utils/errors.dictionary.js";
 import { HttpResponse } from "../utils/http.response.js";
+import { sendGmail } from "../services/email.service.js";
 
 const productService = new ProductService();
 const httpResponse = new HttpResponse();
@@ -63,7 +64,6 @@ export default class ProductController extends Controllers {
         }
     };
 
-
     async getProductsMock(req, res, next) {
         try {
             const products = await productService.getProductsMock();
@@ -72,6 +72,96 @@ export default class ProductController extends Controllers {
             next(error);
         }
     };
+
+    async createProducts(req, res, next) {
+        try {
+            const prod = req.body
+            const user = req.user
+
+            if (!user || (user.role !== "admin" && user.role !== "premium")) {
+                httpResponse.Forbidden(res, errorsDictionary.INVALID_CREDENTIALS);
+                return;
+            }
+
+            const newProd = await productService.createProducts(prod, user.email);
+
+            return newProd
+                ? httpResponse.Ok(res, newProd)
+                : httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async updateProduct(req, res, next) {
+        try {
+            const user = req.user;
+            const { id } = req.params;
+            const prod = req.body;
+
+            const admin = user?.role === "admin";
+            const premium = user?.role === "premium";
+
+            if (!user || (!admin && !premium)) {
+                httpResponse.Forbidden(res, errorsDictionary.INVALID_CREDENTIALS);
+                return;
+            }
+
+            const product = await productService.getById(id);
+
+            if (!product) {
+                httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND);
+            }
+
+            if (product.createdBy !== user.email && !admin) {
+                httpResponse.Forbidden(res, errorsDictionary.INVALID_CREDENTIALS);
+                return;
+            }
+
+            const updatedProd = await productService.update(id, prod);
+
+            return updatedProd
+                ? httpResponse.Ok(res, updatedProd)
+                : httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND);
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async deleteProduct(req, res, next) {
+        try {
+            const user = req.user;
+            const { id } = req.params;
+
+            const admin = user?.role === "admin";
+            const premium = user?.role === "premium";
+
+            if (!user || (!admin && !premium)) {
+                httpResponse.Forbidden(res, errorsDictionary.INVALID_CREDENTIALS);
+                return;
+            }
+
+            const product = await productService.getById(id);
+
+            if (!product) {
+                httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND);
+            }
+
+            if (product.createdBy !== user.email && !admin) {
+                httpResponse.Forbidden(res, errorsDictionary.INVALID_CREDENTIALS);
+                return;
+            }
+
+            const deletedProd = await productService.delete(id);
+            if (premium) await sendGmail(user, 'deleteProd')
+
+            return deletedProd
+                ? httpResponse.Ok(res, "Product deleted")
+                : httpResponse.NotFound(res, errorsDictionary.ITEM_NOT_FOUND);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 

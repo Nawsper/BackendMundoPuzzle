@@ -47,4 +47,5 @@ export default class ProductDaoMongo extends MongoDao {
             throw new Error(error.message);
         }
     }
+
 }        

@@ -1,5 +1,6 @@
 import { createTransport } from "nodemailer";
 import { templateDeleteUser } from "../templates/templateDeleteUser.js";
+import { templateDeleteProd } from "../templates/templateDeleteProd.js";
 import { templateRegister } from "../templates/templateRegister.js";
 import { logger } from "../utils/logger.js";
 import "dotenv/config";
@@ -18,13 +19,25 @@ export const sendGmail = async (user, service) => {
     try {
         const { first_name, email } = user;
 
-        let msg = ''
+        let msg = '';
+        let subj = '';
 
-        service === 'register' ? msg = templateRegister : service === 'deleteUsers' ? msg = templateDeleteUser : msg = ''
-
-        let subj = ''
-
-        subj = service === 'register' ? 'Bienvenido/a a Mundopuzzle' : service === 'deleteUsers' ? 'Usuario eliminado' : ''
+        switch (service) {
+            case 'register':
+                msg = templateRegister;
+                subj = 'Bienvenido/a a Mundopuzzle';
+                break;
+            case 'deleteUsers':
+                msg = templateDeleteUser;
+                subj = 'Usuario eliminado';
+                break;
+            case 'deleteProd':
+                msg = templateDeleteProd;
+                subj = 'Producto eliminado';
+                break;
+            default:
+                return;
+        }
 
         const gmailOptions = {
             from: process.env.EMAIL,

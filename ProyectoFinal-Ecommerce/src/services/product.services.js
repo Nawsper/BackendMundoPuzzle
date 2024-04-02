@@ -55,5 +55,16 @@ export default class ProductServices extends Services {
             throw new Error(error.message);
         }
     }
+
+    async createProducts(obj, userEmail) {
+        try {
+            const newProd = await prodDao.create({ ...obj, createdBy: userEmail });
+            if (!newProd) return false;
+            else return newProd;
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    }
+
 }
 
